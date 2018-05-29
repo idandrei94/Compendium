@@ -26,10 +26,7 @@ namespace Compendium
                 };
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-
-        }
+        private void MainForm_Load(object sender, EventArgs e) { }
 
 #pragma warning disable IDE1006 // Naming Styles
         private void newButton_Click(object sender, EventArgs e)
