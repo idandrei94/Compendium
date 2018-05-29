@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfNote xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Note>
+    <Added>2018-05-28T20:41:00</Added>
+    <Tags>
+      <string>qwe</string>
+      <string>asd</string>
+      <string>zxc</string>
+    </Tags>
+    <Title>qw</Title>
+    <Body>qwedsf adfwqerf qwer
+qad
+f
+asdf
+
+
+asdfasdf</Body>
+  </Note>
+  <Note>
+    <Added>2018-05-29T22:04:00</Added>
+    <Tags>
+      <string>qwe</string>
+    </Tags>
+    <Title>qwe</Title>
+    <Body>qwe</Body>
+  </Note>
+</ArrayOfNote>

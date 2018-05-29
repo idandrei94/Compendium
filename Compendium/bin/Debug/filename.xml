@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfNote xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Note>
+    <Added>2018-05-09T15:47:56.0671446+02:00</Added>
+    <Tags>
+      <string>tag1</string>
+      <string>tag2</string>
+      <string>tag3</string>
+    </Tags>
+    <Title>Title1</Title>
+    <Body>The quick brown fox jumps over the lazy dog.</Body>
+  </Note>
+  <Note>
+    <Added>2018-05-09T15:47:56.0731772+02:00</Added>
+    <Tags>
+      <string>tag4</string>
+      <string>tag5</string>
+      <string>tag3</string>
+    </Tags>
+    <Title>asd</Title>
+    <Body>ertydcvbrtytrgserge.</Body>
+  </Note>
+  <Note>
+    <Added>2018-05-09T15:47:56.0731772+02:00</Added>
+    <Tags>
+      <string>tag6</string>
+      <string>tag2</string>
+      <string>tag3</string>
+    </Tags>
+    <Title>zxc</Title>
+    <Body>xcvbsg4576htgh456yu4.</Body>
+  </Note>
+  <Note>
+    <Added>2018-05-29T00:29:00</Added>
+    <Tags>
+      <string>fdsgsfdg</string>
+    </Tags>
+    <Title>mirceabravo</Title>
+    <Body>sdfgsdfgergrewgresfdgsfd</Body>
+  </Note>
+</ArrayOfNote>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2043
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompendiumGUI", "WinformExperiment\CompendiumGUI.csproj", "{3A08D1AA-908B-46DF-AA91-EBC3F4434D61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compendium", "Compendium\Compendium.csproj", "{0D25C3DA-3D75-453E-897E-FD87818CA683}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A08D1AA-908B-46DF-AA91-EBC3F4434D61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A08D1AA-908B-46DF-AA91-EBC3F4434D61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A08D1AA-908B-46DF-AA91-EBC3F4434D61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A08D1AA-908B-46DF-AA91-EBC3F4434D61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D25C3DA-3D75-453E-897E-FD87818CA683}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D25C3DA-3D75-453E-897E-FD87818CA683}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D25C3DA-3D75-453E-897E-FD87818CA683}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D25C3DA-3D75-453E-897E-FD87818CA683}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {92DA5BC0-0833-4A48-9289-8EADB37488E7}
+	EndGlobalSection
+EndGlobal
