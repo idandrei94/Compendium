@@ -98,13 +98,13 @@ namespace Compendium
                 for (int i = 0; i < databaseTabs.TabPages.Count; ++i)
                 {
                     TabPage tab = databaseTabs.TabPages[i];
-                    if ((tab.Controls[0] as InnerForm).Locked)
-                    {
-                        MessageBox.Show("Unable to close due to work in progress.", "Database busy");
-                        return;
-                    }
                     if (databaseTabs.GetTabRect(i).Contains(e.Location))
                     {
+                        if ((tab.Controls[0] as InnerForm).Locked)
+                        {
+                            MessageBox.Show("Unable to close due to work in progress.", "Database busy");
+                            return;
+                        }
                         if ((tab.Controls[0] as InnerForm).Changed)
                         {
                             if (MessageBox.Show("Save database before closing?", tab.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -114,7 +114,6 @@ namespace Compendium
                         }
                         (tab.Controls[0] as InnerForm).CloseNotes();
                         databaseTabs.TabPages.Remove(tab);
-                        tab.Dispose();
                         if (databaseTabs.TabPages.Count == 0)
                         {
                             filterButton.Enabled = false;
@@ -234,18 +233,18 @@ namespace Compendium
                 }
             }
         }
-        
-        private void saveCurrent_Click(object sender, EventArgs e) => (databaseTabs.SelectedTab.Controls[0] as InnerForm).Save();
 
-        private void saveButton_ButtonClick(object sender, EventArgs e)
+        private void saveCurrent_Click(object sender, EventArgs e)
         {
             if ((databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).Locked)
             {
                 MessageBox.Show("Unable to save due to work in progress.", "Database busy");
                 return;
             }
-            saveCurrent_Click(sender, e);
+            (databaseTabs.SelectedTab.Controls[0] as InnerForm).Save();
         }
+
+        private void saveButton_ButtonClick(object sender, EventArgs e) => saveCurrent_Click(sender, e);
 
         private void saveAll_Click(object sender, EventArgs e)
         {

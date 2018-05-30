@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Compendium.Model.Data
 {
@@ -20,7 +21,7 @@ namespace Compendium.Model.Data
         public DateTime Updated { get => _updated;}
         public List<String> Tags { get => _tags; set { _tags = value; _updated = DateTime.Now; } }
         public String Title { get => _title; set { _title = value; _updated = DateTime.Now; } }
-        public String Body { get => _body; set {_body = value; _updated = DateTime.Now; } }
+        public String Body { get => _body; set {_body = Regex.Replace(value, "(?<!\r)\n", "\r\n"); _updated = DateTime.Now; } }
 
         public Note(String title, String body, String[] tags, DateTime added)
         {

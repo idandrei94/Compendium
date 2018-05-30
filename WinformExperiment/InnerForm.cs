@@ -87,7 +87,8 @@ namespace Compendium
             parent.Invoke((MethodInvoker)delegate { parent.Text = controller.Title; });
             foreach (var note in openNotes)
             {
-                note.Invoke((MethodInvoker)delegate { note.UnlockWindow(); });
+                if(!note.IsDisposed)
+                    note.Invoke((MethodInvoker)delegate { note.UnlockWindow(); });
             }
             locked = false;
         }

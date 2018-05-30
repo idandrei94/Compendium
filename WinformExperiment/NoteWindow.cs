@@ -36,7 +36,6 @@ namespace Compendium
             Console.WriteLine("Locking note window");
             // disable the edit button and prevent saving/deleting
             saveButton.Enabled = false;
-            deleteButton.Enabled = false;
             editButton.Enabled = false;
         }
 
@@ -46,7 +45,6 @@ namespace Compendium
             if (!bodyBox.ReadOnly) // means edit mode 
             {
                 saveButton.Enabled = true;
-                deleteButton.Enabled = true;
             }
             else
             {
@@ -98,6 +96,7 @@ namespace Compendium
         private void saveButton_Click(object sender, EventArgs e)
 #pragma warning restore IDE1006 // Naming Styles
         {
+            Console.WriteLine(bodyBox.Text);
             DisableEditing();
             data = controller.AlterNote(data);
         }
@@ -105,10 +104,9 @@ namespace Compendium
         private void EnableEditing()
         {
             saveButton.Enabled = true;
+            saveButton.Visible = true;
             editButton.Enabled = false;
             editButton.Visible = false;
-            deleteButton.Enabled = true;
-            deleteButton.Visible = true;
             sendToButton.Enabled = false;
 
             tagsUneditable.Visible = false;
@@ -126,10 +124,9 @@ namespace Compendium
             ParseData();
             
             saveButton.Enabled = false;
+            saveButton.Visible = false;
             editButton.Enabled = true;
             editButton.Visible = true;
-            deleteButton.Enabled = false;
-            deleteButton.Visible = false;
             sendToButton.Enabled = true;
 
             tagsUneditable.Visible = true;
