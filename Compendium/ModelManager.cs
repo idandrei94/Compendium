@@ -110,10 +110,13 @@ namespace Compendium.Model
                            )).ToList();
                     isChanged = true;
                     Console.WriteLine("Loaded file");
-                    callback();
                 }
                 catch (Exception)
                 {
+                }
+                finally
+                {
+                    callback();
                 }
             });
             isChanged = true;
