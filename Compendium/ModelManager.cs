@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -14,10 +14,10 @@ namespace Compendium.Model
     class ModelManager : IModel
     {
         private List<Note> notes = new List<Note>();
-        private bool isChanged = true;
-        private String[] _results = null;
+        private bool isChanged = false;
+        private Note[] _results = null;
 
-        public String[] Results { get => (isChanged)  ? (_results = Filter()) :  _results; } 
+        public Note[] Results { get => (isChanged)  ? (_results = Filter()) :  _results; } 
 
         public List<Func<Note, bool>> Filters { get; } = new List<Func<Note, bool>>();
 
@@ -40,6 +40,7 @@ namespace Compendium.Model
         
         public ModelManager()
         {
+            _results = new Note[0];
         }
 
         public string Add(String title, String body, String[] tags, DateTime? added = null)
@@ -59,7 +60,6 @@ namespace Compendium.Model
 
         public void Save(string filename)
         {
-            Console.WriteLine("Saving to {0}", filename);
             XmlSerializer serializer = new XmlSerializer(typeof(List<Note>));
 
             using (var writer = new StreamWriter(filename))
@@ -68,40 +68,68 @@ namespace Compendium.Model
             }
         }
 
-        public int Load(string filename)
+        public void Load(string filename)
         {
+            Console.WriteLine("loading file");
             notes = new List<Note>();
             Name = filename;
             try
             {
                 XDocument notesXML = XDocument.Load(filename);
-                notes =
-                    notesXML.Root.Elements("Note")
-                        .Select(n => new Note(
-                            (string)n.Element("Title"),
-                            (string)n.Element("Body"),
-                            n.Element("Tags").Elements().Select(t => (string)t).ToArray<String>(),
-                            DateTime.Parse((string)n.Element("Added"))
-                        )).ToList();
+                notes = notesXML.Root.Elements("Note")
+                       .Select(n => new Note(
+                           (string)n.Element("Title"),
+                           (string)n.Element("Body"),
+                           n.Element("Tags").Elements().Select(t => (string)t).ToArray<String>(),
+                           DateTime.Parse((string)n.Element("Added"))
+                       )).ToList();
+                isChanged = true;
             }
-            catch(Exception)
+            catch (Exception)
             {
             }
             isChanged = true;
-            return notes.Count;
+        }
+
+        public void Load_Async(string filename, Action callback)
+        {
+            Console.WriteLine("loading file async");
+            notes = new List<Note>();
+            Name = filename;
+            Task.Run(() =>
+            {
+                try
+                {
+                    XDocument notesXML = XDocument.Load(filename);
+                    notes = notesXML.Root.Elements("Note")
+                           .Select(n => new Note(
+                               (string)n.Element("Title"),
+                               (string)n.Element("Body"),
+                               n.Element("Tags").Elements().Select(t => (string)t).ToArray<String>(),
+                               DateTime.Parse((string)n.Element("Added"))
+                           )).ToList();
+                    isChanged = true;
+                    Console.WriteLine("Loaded file");
+                    callback();
+                }
+                catch (Exception)
+                {
+                }
+            });
+            isChanged = true;
         }
 
         public IEnumerator<String> GetEnumerator() => notes.Select(x => x.ToString()).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => notes.Select(x => x.ToString()).GetEnumerator();
 
-        public string[] Filter()
+        private Note[] Filter()
         {
             isChanged = false;
             return notes.AsParallel().Where(
                 n => Filters.Aggregate(
                     true, (acc, val) => acc && val(n) )
-                       ).Select(n => n.ToString()).ToArray();
+                       ).ToArray();
         }
         
         public int RemoveFilter(int filterIndex)
@@ -113,8 +141,10 @@ namespace Compendium.Model
 
         public int AddFilter(NoteFilterFactory.FilterType type, String arg)
         {
-            Filters.Add(NoteFilterFactory.Filter(type, arg));
-            isChanged = true;
+            var filter = NoteFilterFactory.Filter(type, arg);
+            Filters.Add(filter);
+            //isChanged = true;
+            _results = _results.Where(r => filter(r)).ToArray();
             return Filters.Count;
         }
 

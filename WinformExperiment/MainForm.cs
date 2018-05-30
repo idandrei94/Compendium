@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Compendium
@@ -15,11 +16,11 @@ namespace Compendium
                 {
                     foreach(TabPage tab in databaseTabs.TabPages)
                     {
-                        if((tab.Controls[0] as InnerForm).Controller.Changed)
+                        if((tab.Controls[0] as InnerForm).Changed)
                         {
                             if (MessageBox.Show("Save database before closing?", tab.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
-                                (tab.Controls[0] as InnerForm).Controller.Save();
+                                (tab.Controls[0] as InnerForm).Save();
                             }
                         }
                     }
@@ -57,15 +58,15 @@ namespace Compendium
 
             TabPage page = new TabPage(title)
             {
-                Anchor = AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom
+                Anchor = AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom, Text = title + "*loading"
             };
-            Form form = new InnerForm(filename, title);
-            page.Controls.Add(form);
             databaseTabs.TabPages.Add(page);
+            databaseTabs.SelectTab(page);
+            
+            page.Controls.Add(new InnerForm(filename, title, page));
             filterButton.Enabled = true;
             addNoteButton.Enabled = true;
             saveButton.Enabled = true;
-            databaseTabs.SelectTab(page);
         }
 
         private String checkTabTitle(string title)
@@ -97,14 +98,18 @@ namespace Compendium
                 for (int i = 0; i < databaseTabs.TabPages.Count; ++i)
                 {
                     TabPage tab = databaseTabs.TabPages[i];
+                    if ((tab.Controls[0] as InnerForm).Locked)
+                    {
+                        MessageBox.Show("Unable to close due to work in progress.", "Database busy");
+                        return;
+                    }
                     if (databaseTabs.GetTabRect(i).Contains(e.Location))
                     {
-
-                        if ((tab.Controls[0] as InnerForm).Controller.Changed)
+                        if ((tab.Controls[0] as InnerForm).Changed)
                         {
                             if (MessageBox.Show("Save database before closing?", tab.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
-                                (tab.Controls[0] as InnerForm).Controller.Save();
+                                (tab.Controls[0] as InnerForm).Save();
                             }
                         }
                         (tab.Controls[0] as InnerForm).CloseNotes();
@@ -124,12 +129,17 @@ namespace Compendium
 
         private void hasTagToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if ((databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).Locked)
+            {
+                MessageBox.Show("Unable to add filter due to work in progress.", "Database busy");
+                return;
+            }
             using (PromptBox dlg = new PromptBox("Tag:", "Add tag filter", "default"))
             {
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    (databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).AddFilter("tag-" + dlg.Data);
-                    (databaseTabs.SelectedTab.Controls[0] as InnerForm).Controller.AddFilter(Compendium.Model.Filtering.NoteFilterFactory.FilterType.TAG, dlg.Data);
+                    (databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).AddDisplayFilter("tag-" + dlg.Data);
+                    (databaseTabs.SelectedTab.Controls[0] as InnerForm).AddFilter(Compendium.Model.Filtering.NoteFilterFactory.FilterType.TAG, dlg.Data);
                 }
             }
         }
@@ -147,63 +157,93 @@ namespace Compendium
 
         private void addNoteButton_Click(object sender, EventArgs e)
         {
+            if ((databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).Locked)
+            {
+                MessageBox.Show("Unable to add filter due to work in progress.", "Database busy");
+                return;
+            }
             InnerForm page = databaseTabs.SelectedTab.Controls[0] as InnerForm;
             page.NewNote();
         }
 
         private void beforeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if ((databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).Locked)
+            {
+                MessageBox.Show("Unable to add filter due to work in progress.", "Database busy");
+                return;
+            }
             using (DatePromptBox dlg = new DatePromptBox("Date Picker"))
             {
                 if(dlg.ShowDialog() == DialogResult.OK)
                 {
-                    (databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).AddFilter("before-" + dlg.Data.ToShortDateString());
+                    (databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).AddDisplayFilter("before-" + dlg.Data.ToShortDateString());
                     InnerForm page = databaseTabs.SelectedTab.Controls[0] as InnerForm;
-                    page.Controller.AddFilter(Model.Filtering.NoteFilterFactory.FilterType.DATE_BEFORE, dlg.Data);
+                    page.AddFilter(Model.Filtering.NoteFilterFactory.FilterType.DATE_BEFORE, dlg.Data);
                 }
             }
         }
 
         private void doesntHaveTagToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if ((databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).Locked)
+            {
+                MessageBox.Show("Unable to add filter due to work in progress.", "Error");
+                return;
+            }
             using (PromptBox dlg = new PromptBox("Tag:", "Add tag missing filter", "default"))
             {
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    (databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).AddFilter("notag-" + dlg.Data);
-                    (databaseTabs.SelectedTab.Controls[0] as InnerForm).Controller.AddFilter(Compendium.Model.Filtering.NoteFilterFactory.FilterType.TAG_INVERTED, dlg.Data);
+                    (databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).AddDisplayFilter("notag-" + dlg.Data);
+                    (databaseTabs.SelectedTab.Controls[0] as InnerForm).AddFilter(Compendium.Model.Filtering.NoteFilterFactory.FilterType.TAG_INVERTED, dlg.Data);
                 }
             }
         }
 
         private void afterToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if ((databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).Locked)
+            {
+                MessageBox.Show("Unable to add filter due to work in progress.", "Database busy");
+                return;
+            }
             using (DatePromptBox dlg = new DatePromptBox("Date Picker"))
             {
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    (databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).AddFilter("after-" + dlg.Data.ToShortDateString());
-                    (databaseTabs.SelectedTab.Controls[0] as InnerForm).Controller.AddFilter(Model.Filtering.NoteFilterFactory.FilterType.DATE_AFTER, dlg.Data);
+                    (databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).AddDisplayFilter("after-" + dlg.Data.ToShortDateString());
+                    (databaseTabs.SelectedTab.Controls[0] as InnerForm).AddFilter(Model.Filtering.NoteFilterFactory.FilterType.DATE_AFTER, dlg.Data);
                 }
             }
         }
 
         private void keywordToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if ((databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).Locked)
+            {
+                MessageBox.Show("Unable to add filter due to work in progress.", "Error");
+                return;
+            }
             using (PromptBox dlg = new PromptBox("Keyword:", "Add keyword filter", "default"))
             {
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    (databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).AddFilter("keyword-" + dlg.Data);
-                    (databaseTabs.SelectedTab.Controls[0] as InnerForm).Controller.AddFilter(Compendium.Model.Filtering.NoteFilterFactory.FilterType.KEYWORD, dlg.Data);
+                    (databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).AddDisplayFilter("keyword-" + dlg.Data);
+                    (databaseTabs.SelectedTab.Controls[0] as InnerForm).AddFilter(Compendium.Model.Filtering.NoteFilterFactory.FilterType.KEYWORD, dlg.Data);
                 }
             }
         }
         
-        private void saveCurrent_Click(object sender, EventArgs e) => (databaseTabs.SelectedTab.Controls[0] as InnerForm).Controller.Save();
+        private void saveCurrent_Click(object sender, EventArgs e) => (databaseTabs.SelectedTab.Controls[0] as InnerForm).Save();
 
         private void saveButton_ButtonClick(object sender, EventArgs e)
         {
+            if ((databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).Locked)
+            {
+                MessageBox.Show("Unable to save due to work in progress.", "Database busy");
+                return;
+            }
             saveCurrent_Click(sender, e);
         }
 
@@ -211,7 +251,24 @@ namespace Compendium
         {
             foreach(TabPage tab in databaseTabs.TabPages)
             {
-                (tab.Controls[0] as InnerForm).Controller.Save();
+                if ((tab.Controls[0] as InnerForm).Locked)
+                {
+                    MessageBox.Show("Unable to save due to work in progress.", "Database busy");
+                    return;
+                }
+            }
+            foreach(TabPage tab in databaseTabs.TabPages)
+            {
+                (tab.Controls[0] as InnerForm).Save();
+            }
+        }
+
+        private void filterButton_Click(object sender, EventArgs e)
+        {
+            if ((databaseTabs.TabPages[databaseTabs.SelectedIndex].Controls[0] as InnerForm).Locked)
+            {
+                MessageBox.Show("Unable to add filter due to work in progress.", "Error");
+                return;
             }
         }
     }

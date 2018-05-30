@@ -1,12 +1,4 @@
-﻿using Compendium;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Forms;
 
 namespace Compendium
@@ -37,6 +29,29 @@ namespace Compendium
         private void NoteWindow_Load(object sender, EventArgs e)
         {
 
+        }
+
+        public void LockWindow()
+        {
+            Console.WriteLine("Locking note window");
+            // disable the edit button and prevent saving/deleting
+            saveButton.Enabled = false;
+            deleteButton.Enabled = false;
+            editButton.Enabled = false;
+        }
+
+        public void UnlockWindow()
+        {
+            Console.WriteLine("Unlocking note window");
+            if (!bodyBox.ReadOnly) // means edit mode 
+            {
+                saveButton.Enabled = true;
+                deleteButton.Enabled = true;
+            }
+            else
+            {
+                editButton.Enabled = true;
+            }
         }
 
         private void ParseData()

@@ -10,7 +10,7 @@ namespace Compendium.Model
 
         List<Func<Note, bool>> Filters { get; }
 
-        String[] Results { get; }
+        Note[] Results { get; }
 
         String Name { get; set; }
 
@@ -20,9 +20,8 @@ namespace Compendium.Model
         String Add(String title, String body, String[] tags, DateTime? added = null);
         int Remove(long ID);
         void Save(String filename);
-        int Load(String filename);
-
-        String[] Filter();
+        void Load(String filename);
+        void Load_Async(string filename, Action callback);
 
         int RemoveFilter(int filterIndex);
 

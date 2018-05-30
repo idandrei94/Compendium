@@ -3,7 +3,9 @@ using Compendium.Model.Filtering;
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Compendium
 {
@@ -13,35 +15,30 @@ namespace Compendium
         private String filepath;
         private String title;
 
+        public String Title { get => title; }
+        public String Filepath { get => filepath; }
+
         private bool _changed;
 
         public bool Changed { get => _changed; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         
-        public String[] Results => model.Results;
-
-        private Controller(String filepath, IModel model)
-        {
-            this.filepath = filepath;
-            this.model = model;
-            _changed = false;
-        }
+        public String[] Results => model.Results.Select(n => n.ToString()).ToArray();
 
         public Controller(String filepath, String title)
         {
             this.title = title;
             this.filepath = filepath;
-            model = File.Exists(filepath) ? Controller.Open(filepath) : new ModelManager();
-            File.Exists(filepath);
+            model = new ModelManager();
             _changed = false;
         }
 
-        public static IModel Open(String filename)
+        public void Open()
         {
-            IModel newModel = new ModelManager();
-            newModel.Load(filename);
-            return newModel;
+            model.Load_Async(filepath, () => {
+                OnPropertyChanged("Results");
+            });
         }
 
         public int Save()

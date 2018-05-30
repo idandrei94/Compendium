@@ -99,14 +99,14 @@
             // saveAll
             // 
             this.saveAll.Name = "saveAll";
-            this.saveAll.Size = new System.Drawing.Size(180, 22);
+            this.saveAll.Size = new System.Drawing.Size(114, 22);
             this.saveAll.Text = "All";
             this.saveAll.Click += new System.EventHandler(this.saveAll_Click);
             // 
             // saveCurrent
             // 
             this.saveCurrent.Name = "saveCurrent";
-            this.saveCurrent.Size = new System.Drawing.Size(180, 22);
+            this.saveCurrent.Size = new System.Drawing.Size(114, 22);
             this.saveCurrent.Text = "Current";
             this.saveCurrent.Click += new System.EventHandler(this.saveCurrent_Click);
             // 
@@ -123,6 +123,7 @@
             this.filterButton.Name = "filterButton";
             this.filterButton.Size = new System.Drawing.Size(71, 22);
             this.filterButton.Text = "Add Filter";
+            this.filterButton.Click += new System.EventHandler(this.filterButton_Click);
             // 
             // tagToolStripMenuItem
             // 
@@ -136,14 +137,14 @@
             // hasTagToolStripMenuItem
             // 
             this.hasTagToolStripMenuItem.Name = "hasTagToolStripMenuItem";
-            this.hasTagToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.hasTagToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.hasTagToolStripMenuItem.Text = "With";
             this.hasTagToolStripMenuItem.Click += new System.EventHandler(this.hasTagToolStripMenuItem_Click);
             // 
             // doesntHaveTagToolStripMenuItem
             // 
             this.doesntHaveTagToolStripMenuItem.Name = "doesntHaveTagToolStripMenuItem";
-            this.doesntHaveTagToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.doesntHaveTagToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.doesntHaveTagToolStripMenuItem.Text = "Without";
             this.doesntHaveTagToolStripMenuItem.Click += new System.EventHandler(this.doesntHaveTagToolStripMenuItem_Click);
             // 
