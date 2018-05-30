@@ -111,8 +111,10 @@ namespace Compendium.Model
                     isChanged = true;
                     Console.WriteLine("Loaded file");
                 }
-                catch (Exception)
+                catch (FileNotFoundException)
                 {
+                    notes = new List<Note>();
+                    Save(filename);
                 }
                 finally
                 {
