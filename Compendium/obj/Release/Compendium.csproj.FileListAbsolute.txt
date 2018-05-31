@@ -1,7 +1,0 @@
-Q:\Entropy\doc\Arbeit\C#\Compendium\Compendium\obj\Release\Compendium.csproj.CoreCompileInputs.cache
-Q:\Entropy\doc\Arbeit\C#\Compendium\Compendium\bin\Release\Compendium_backend.pdb
-Q:\Entropy\doc\Arbeit\C#\Compendium\Compendium\obj\Release\Compendium_backend.pdb
-Q:\Entropy\doc\Arbeit\C#\Compendium\Compendium\bin\Release\Compendium_backend.dll.config
-Q:\Entropy\doc\Arbeit\C#\Compendium\Compendium\bin\Release\Compendium_backend.dll
-Q:\Entropy\doc\Arbeit\C#\Compendium\Compendium\obj\Release\Compendium_backend.dll
-Q:\Entropy\doc\Arbeit\C#\Compendium\Compendium\obj\Release\Compendium.csprojResolveAssemblyReference.cache
