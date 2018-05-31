@@ -20,8 +20,7 @@ namespace Compendium.Model
         String Add(String title, String body, String[] tags, DateTime? added = null);
         int Remove(long ID);
         void Save(String filename);
-        void Load(String filename);
-        void Load_Async(string filename, Action callback);
+        void Load_Async(string filename, Action callback, Action error);
 
         int RemoveFilter(int filterIndex);
 

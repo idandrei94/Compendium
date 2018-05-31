@@ -32,11 +32,12 @@ namespace Compendium
             _changed = false;
         }
 
-        public void Open()
+        public void Open(Action error)
         {
-            model.Load_Async(filepath, () => {
+            model.Load_Async(filepath, () =>
+            {
                 OnPropertyChanged("Results");
-            });
+            }, error);
         }
 
         public int Save()

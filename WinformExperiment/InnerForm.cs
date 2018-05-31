@@ -45,7 +45,7 @@ namespace Compendium
                     {
                         Console.WriteLine("Preparing the ListViewItem objects");
                         DateTime start = DateTime.Now;
-                        ListViewItem[] items = controller.Results.AsParallel().Select(note => new ListViewItem( note.Split((char)31)[1])).ToArray();
+                        ListViewItem[] items = controller.Results.AsParallel().Select(note => new ListViewItem(note.Split((char)31)[1])).ToArray();
                         Console.WriteLine("Creating {0} ListViewItem objects took {1} seconds", items.Count(), (DateTime.Now - start).TotalSeconds);
                         Console.WriteLine("fetched titles");
                         while (resultList.Items.Count > 0)
@@ -69,7 +69,12 @@ namespace Compendium
                     });
                 }
             };
-            controller.Open();
+            controller.Open( () =>
+            {
+                Invoke((MethodInvoker)delegate {
+                    MessageBox.Show("Selected file contains no valid Compendium database.", "Invalid file");
+                    (parent.Parent as TabControl).TabPages.Remove(parent); });
+            });
         }
 
         private void Lock()

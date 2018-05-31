@@ -68,30 +68,7 @@ namespace Compendium.Model
             }
         }
 
-        public void Load(string filename)
-        {
-            Console.WriteLine("loading file");
-            notes = new List<Note>();
-            Name = filename;
-            try
-            {
-                XDocument notesXML = XDocument.Load(filename);
-                notes = notesXML.Root.Elements("Note")
-                       .Select(n => new Note(
-                           (string)n.Element("Title"),
-                           (string)n.Element("Body"),
-                           n.Element("Tags").Elements().Select(t => (string)t).ToArray<String>(),
-                           DateTime.Parse((string)n.Element("Added"))
-                       )).ToList();
-                isChanged = true;
-            }
-            catch (Exception)
-            {
-            }
-            isChanged = true;
-        }
-
-        public void Load_Async(string filename, Action callback)
+        public void Load_Async(string filename, Action callback, Action error)
         {
             Console.WriteLine("loading file async");
             notes = new List<Note>();
@@ -100,6 +77,7 @@ namespace Compendium.Model
             {
                 try
                 {
+                    DateTime start = DateTime.Now;
                     XDocument notesXML = XDocument.Load(filename);
                     notes = notesXML.Root.Elements("Note")
                            .Select(n => new Note(
@@ -109,16 +87,18 @@ namespace Compendium.Model
                                DateTime.Parse((string)n.Element("Added"))
                            )).ToList();
                     isChanged = true;
-                    Console.WriteLine("Loaded file");
+                    Console.WriteLine("Loaded file in {0} seconds", (DateTime.Now - start).TotalSeconds);
+                    callback();
                 }
                 catch (FileNotFoundException)
                 {
                     notes = new List<Note>();
                     Save(filename);
-                }
-                finally
-                {
                     callback();
+                }
+                catch (Exception)
+                {
+                    error();
                 }
             });
             isChanged = true;

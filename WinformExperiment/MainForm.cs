@@ -58,15 +58,23 @@ namespace Compendium
 
             TabPage page = new TabPage(title)
             {
-                Anchor = AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom, Text = title + "*loading"
+                Anchor = AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom,
+                Text = title + "*loading"
             };
             databaseTabs.TabPages.Add(page);
             databaseTabs.SelectTab(page);
-            
-            page.Controls.Add(new InnerForm(filename, title, page));
-            filterButton.Enabled = true;
-            addNoteButton.Enabled = true;
-            saveButton.Enabled = true;
+
+            try
+            {
+                page.Controls.Add(new InnerForm(filename, title, page));
+                filterButton.Enabled = true;
+                addNoteButton.Enabled = true;
+                saveButton.Enabled = true;
+            }
+            catch(ArgumentException)
+            {
+                databaseTabs.TabPages.Remove(page);
+            }
         }
 
         private String checkTabTitle(string title)
