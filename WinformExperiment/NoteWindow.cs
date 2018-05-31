@@ -70,7 +70,7 @@ namespace Compendium
             bodyBox.Text = body;
             dateAddedLabel.Text = added;
             dateUpdatedLabel.Text = updated;
-            String[] tagList = tags.Split(';');
+            String[] tagList = tags.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             tagsEditable.Text = tags;
             tagsUneditable.TabPages.Clear();
             foreach(String tag in tagList)
@@ -78,6 +78,7 @@ namespace Compendium
                 tagsUneditable.TabPages.Add(new TabPage(tag));
                 tagsUneditable.SelectedIndex = -1;
             }
+            tagsUneditable.Visible = tagsUneditable.TabPages.Count > 0;
         }
 
 #pragma warning disable IDE1006 // Naming Styles
@@ -109,7 +110,6 @@ namespace Compendium
             saveButton.Visible = true;
             editButton.Enabled = false;
             editButton.Visible = false;
-            sendToButton.Enabled = false;
 
             tagsUneditable.Visible = false;
             tagsEditable.Visible = true;
@@ -124,14 +124,13 @@ namespace Compendium
 
             data = data.Split(DELIMITATOR)[0] + DELIMITATOR + titleEditableBox.Text + DELIMITATOR + tagsEditable.Text.Trim(';') + DELIMITATOR + dateAddedLabel.Text + DELIMITATOR + bodyBox.Text + DELIMITATOR + dateUpdatedLabel.Text;
             ParseData();
-            
+
             saveButton.Enabled = false;
             saveButton.Visible = false;
             editButton.Enabled = true;
             editButton.Visible = true;
-            sendToButton.Enabled = true;
 
-            tagsUneditable.Visible = true;
+            tagsUneditable.Visible = tagsUneditable.TabPages.Count > 0;
             tagsEditable.Visible = false;
             bodyBox.ReadOnly = true;
             titleBox.Visible = true;

@@ -2,4 +2,7 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/WinformExperiment/bin/Debug/databases/work_db.xml
+/WinformExperiment/bin
+/WinformExperiment/obj
+/Compendium/bin
+/Compendium/obj

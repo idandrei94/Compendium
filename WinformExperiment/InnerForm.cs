@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.ListView;
 
 namespace Compendium
 {
@@ -42,6 +43,26 @@ namespace Compendium
             filterList.Visible = false;
             currentNoteTags.SelectedIndex = -1;
             controller = new Controller(filepath, title);
+
+            currentPageEditable.KeyDown += (object sender, KeyEventArgs args) =>
+            {
+                if (!Locked && args.KeyCode == Keys.Enter)
+                {
+                    if (Int32.TryParse(currentPageEditable.Text, out int number))
+                    {
+                        if (number >= 1 && number <= pageCount + 1)
+                        {
+                            currentPage = number - 1;
+                            DisplayCurrentPage();
+                        }
+                        else
+                            currentPageEditable.Text = (currentPage + 1).ToString();
+                    }
+                    else
+                        currentPageEditable.Text = (currentPage + 1).ToString();
+                }
+            };
+
             controller.PropertyChanged += (object sender, PropertyChangedEventArgs args) =>
             {
                 if (args.PropertyName == "Results")
@@ -53,6 +74,7 @@ namespace Compendium
                     DisplayCurrentPage();
                 }
             };
+            Lock();
             controller.Open( () =>
             {
                 Invoke((MethodInvoker)delegate {
@@ -86,13 +108,23 @@ namespace Compendium
             Console.WriteLine("ListView populated, updating labels and stuff");
             BeginInvoke((MethodInvoker)delegate 
             {
-                currentPageLabel.Text = "Page " + (currentPage+1) + " / " + pageCount;
+                currentPageEditable.Text = (currentPage + 1).ToString();
                 currentNoteTags.TabPages.Clear();
                 currentNoteTags.Visible = false;
             });
             resultCountLabel.BeginInvoke((MethodInvoker)delegate
             {
-                resultCountLabel.Text = "Showing results " + (currentPage * RESULTS_PER_PAGE + 1) + "-" + (currentPage * RESULTS_PER_PAGE + resultsToShow) + "/" + controller.ResultCount;
+                resultCountLabel.Text = controller.ResultCount > 0 ?
+                                            "Showing results " +
+                                            (currentPage * RESULTS_PER_PAGE + 1) +
+                                            "-" +
+                                            (currentPage * RESULTS_PER_PAGE + resultsToShow) +
+                                            "/" +
+                                            controller.ResultCount +
+                                            "(" + pageCount +
+                                            " page" +
+                                            (pageCount != 1 ? "s)" : ")")
+                                        : "No results";
             });
             Console.WriteLine("Displaying complete, unlocking...");
             Unlock();
@@ -106,6 +138,7 @@ namespace Compendium
                 parent.Text = parent.Text.Split('*')[0] + "*busy";
                 nextPage.Enabled = false;
                 prevPage.Enabled = false;
+                currentPageEditable.ReadOnly = true;
             });
             
             foreach(var note in openNotes)
@@ -124,6 +157,7 @@ namespace Compendium
                 parent.Text = controller.Title;
                 nextPage.Enabled = (currentPage+1) < pageCount;
                 prevPage.Enabled = currentPage > 0;
+                currentPageEditable.ReadOnly = false;
             });
             foreach (var note in openNotes)
             {
@@ -240,14 +274,31 @@ namespace Compendium
             }
             try
             {
-                String item = resultStrings[resultList.SelectedIndices[0]];
-                String[] tags = item.Split((char)31)[2].Split(';');
-                foreach (String tag in tags)
+                List<string> allTags = new List<string>();
+
+                foreach (int chosenIndex in resultList.SelectedIndices)
+                {
+                    (allTags as List<string>).AddRange(resultStrings[chosenIndex].Split((char)31)[2].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+                }
+
+                List<string> commonTags = new List<string>(
+                    allTags.Distinct().Where(
+                        (tag) =>
+                        {
+                            foreach (int chosenIndex in resultList.SelectedIndices)
+                            {
+                                if (!resultStrings[chosenIndex].Split((char)31)[2].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Any(tag.Contains))
+                                    return false;
+                            }
+                            return true;
+                        }));
+                currentNoteTags.TabPages.Clear();
+                foreach (String tag in commonTags)
                 {
                     currentNoteTags.TabPages.Add(tag);
                 }
                 currentNoteTags.SelectedIndex = -1;
-                currentNoteTags.Visible = true;
+                    currentNoteTags.Visible = currentNoteTags.TabPages.Count > 0;
             }
             catch(Exception)
             {

@@ -34,7 +34,6 @@
             this.editButton = new System.Windows.Forms.Button();
             this.added = new System.Windows.Forms.Label();
             this.dateAddedLabel = new System.Windows.Forms.Label();
-            this.sendToButton = new System.Windows.Forms.Button();
             this.tagsEditable = new System.Windows.Forms.TextBox();
             this.tagLabel = new System.Windows.Forms.Label();
             this.tagsUneditable = new System.Windows.Forms.TabControl();
@@ -58,9 +57,9 @@
             // saveButton
             // 
             this.saveButton.Enabled = false;
-            this.saveButton.Location = new System.Drawing.Point(234, 109);
+            this.saveButton.Location = new System.Drawing.Point(344, 76);
             this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(75, 23);
+            this.saveButton.Size = new System.Drawing.Size(75, 25);
             this.saveButton.TabIndex = 4;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
@@ -68,9 +67,9 @@
             // 
             // editButton
             // 
-            this.editButton.Location = new System.Drawing.Point(234, 109);
+            this.editButton.Location = new System.Drawing.Point(344, 76);
             this.editButton.Name = "editButton";
-            this.editButton.Size = new System.Drawing.Size(75, 23);
+            this.editButton.Size = new System.Drawing.Size(75, 25);
             this.editButton.TabIndex = 5;
             this.editButton.Text = "Edit";
             this.editButton.UseVisualStyleBackColor = true;
@@ -79,7 +78,7 @@
             // added
             // 
             this.added.AutoSize = true;
-            this.added.Location = new System.Drawing.Point(12, 90);
+            this.added.Location = new System.Drawing.Point(13, 90);
             this.added.Name = "added";
             this.added.Size = new System.Drawing.Size(41, 13);
             this.added.TabIndex = 6;
@@ -88,21 +87,11 @@
             // dateAddedLabel
             // 
             this.dateAddedLabel.AutoSize = true;
-            this.dateAddedLabel.Location = new System.Drawing.Point(72, 90);
+            this.dateAddedLabel.Location = new System.Drawing.Point(67, 90);
             this.dateAddedLabel.MinimumSize = new System.Drawing.Size(150, 0);
             this.dateAddedLabel.Name = "dateAddedLabel";
             this.dateAddedLabel.Size = new System.Drawing.Size(150, 13);
             this.dateAddedLabel.TabIndex = 7;
-            // 
-            // sendToButton
-            // 
-            this.sendToButton.Location = new System.Drawing.Point(397, 109);
-            this.sendToButton.Name = "sendToButton";
-            this.sendToButton.Size = new System.Drawing.Size(75, 23);
-            this.sendToButton.TabIndex = 8;
-            this.sendToButton.Text = "Send To";
-            this.sendToButton.UseVisualStyleBackColor = true;
-            this.sendToButton.Click += new System.EventHandler(this.sendToButton_Click);
             // 
             // tagsEditable
             // 
@@ -133,7 +122,7 @@
             // updatedLabel
             // 
             this.updatedLabel.AutoSize = true;
-            this.updatedLabel.Location = new System.Drawing.Point(12, 109);
+            this.updatedLabel.Location = new System.Drawing.Point(13, 115);
             this.updatedLabel.Name = "updatedLabel";
             this.updatedLabel.Size = new System.Drawing.Size(48, 13);
             this.updatedLabel.TabIndex = 13;
@@ -142,7 +131,7 @@
             // dateUpdatedLabel
             // 
             this.dateUpdatedLabel.AutoSize = true;
-            this.dateUpdatedLabel.Location = new System.Drawing.Point(72, 109);
+            this.dateUpdatedLabel.Location = new System.Drawing.Point(67, 115);
             this.dateUpdatedLabel.MinimumSize = new System.Drawing.Size(150, 0);
             this.dateUpdatedLabel.Name = "dateUpdatedLabel";
             this.dateUpdatedLabel.Size = new System.Drawing.Size(150, 13);
@@ -171,9 +160,9 @@
             // deleteButton
             // 
             this.deleteButton.ForeColor = System.Drawing.Color.Red;
-            this.deleteButton.Location = new System.Drawing.Point(315, 109);
+            this.deleteButton.Location = new System.Drawing.Point(344, 103);
             this.deleteButton.Name = "deleteButton";
-            this.deleteButton.Size = new System.Drawing.Size(75, 23);
+            this.deleteButton.Size = new System.Drawing.Size(75, 25);
             this.deleteButton.TabIndex = 17;
             this.deleteButton.Text = "Delete";
             this.deleteButton.UseVisualStyleBackColor = true;
@@ -192,7 +181,6 @@
             this.Controls.Add(this.tagsUneditable);
             this.Controls.Add(this.tagLabel);
             this.Controls.Add(this.tagsEditable);
-            this.Controls.Add(this.sendToButton);
             this.Controls.Add(this.dateAddedLabel);
             this.Controls.Add(this.added);
             this.Controls.Add(this.editButton);
@@ -215,7 +203,6 @@
         private System.Windows.Forms.Button editButton;
         private System.Windows.Forms.Label added;
         private System.Windows.Forms.Label dateAddedLabel;
-        private System.Windows.Forms.Button sendToButton;
         private System.Windows.Forms.TextBox tagsEditable;
         private System.Windows.Forms.Label tagLabel;
         private System.Windows.Forms.TabControl tagsUneditable;

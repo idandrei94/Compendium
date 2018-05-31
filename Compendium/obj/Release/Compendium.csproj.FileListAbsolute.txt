@@ -4,3 +4,4 @@ Q:\Entropy\doc\Arbeit\C#\Compendium\Compendium\obj\Release\Compendium_backend.pd
 Q:\Entropy\doc\Arbeit\C#\Compendium\Compendium\bin\Release\Compendium_backend.dll.config
 Q:\Entropy\doc\Arbeit\C#\Compendium\Compendium\bin\Release\Compendium_backend.dll
 Q:\Entropy\doc\Arbeit\C#\Compendium\Compendium\obj\Release\Compendium_backend.dll
+Q:\Entropy\doc\Arbeit\C#\Compendium\Compendium\obj\Release\Compendium.csprojResolveAssemblyReference.cache

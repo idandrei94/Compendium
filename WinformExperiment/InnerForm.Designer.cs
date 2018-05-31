@@ -35,8 +35,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.prevPage = new System.Windows.Forms.Button();
             this.nextPage = new System.Windows.Forms.Button();
-            this.currentPageLabel = new System.Windows.Forms.Label();
             this.resultCountLabel = new System.Windows.Forms.Label();
+            this.currentPageEditable = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // filtersLabel
@@ -66,7 +67,6 @@
             this.resultList.GridLines = true;
             this.resultList.Location = new System.Drawing.Point(13, 45);
             this.resultList.Margin = new System.Windows.Forms.Padding(10);
-            this.resultList.MultiSelect = false;
             this.resultList.Name = "resultList";
             this.resultList.Size = new System.Drawing.Size(724, 368);
             this.resultList.TabIndex = 3;
@@ -117,26 +117,35 @@
             this.nextPage.UseVisualStyleBackColor = true;
             this.nextPage.Click += new System.EventHandler(this.nextPage_Click);
             // 
-            // currentPageLabel
-            // 
-            this.currentPageLabel.AutoSize = true;
-            this.currentPageLabel.Location = new System.Drawing.Point(550, 426);
-            this.currentPageLabel.MaximumSize = new System.Drawing.Size(100, 25);
-            this.currentPageLabel.MinimumSize = new System.Drawing.Size(100, 25);
-            this.currentPageLabel.Name = "currentPageLabel";
-            this.currentPageLabel.Size = new System.Drawing.Size(100, 25);
-            this.currentPageLabel.TabIndex = 8;
-            this.currentPageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // resultCountLabel
             // 
             this.resultCountLabel.AutoSize = true;
             this.resultCountLabel.Location = new System.Drawing.Point(12, 425);
-            this.resultCountLabel.MinimumSize = new System.Drawing.Size(400, 25);
+            this.resultCountLabel.MinimumSize = new System.Drawing.Size(300, 25);
             this.resultCountLabel.Name = "resultCountLabel";
-            this.resultCountLabel.Size = new System.Drawing.Size(400, 25);
+            this.resultCountLabel.Size = new System.Drawing.Size(300, 25);
             this.resultCountLabel.TabIndex = 9;
             this.resultCountLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // currentPageEditable
+            // 
+            this.currentPageEditable.Location = new System.Drawing.Point(550, 428);
+            this.currentPageEditable.MaxLength = 10;
+            this.currentPageEditable.Name = "currentPageEditable";
+            this.currentPageEditable.Size = new System.Drawing.Size(100, 20);
+            this.currentPageEditable.TabIndex = 10;
+            this.currentPageEditable.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(478, 425);
+            this.label2.MinimumSize = new System.Drawing.Size(0, 25);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(32, 25);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Page";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // InnerForm
             // 
@@ -145,8 +154,9 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(749, 489);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.currentPageEditable);
             this.Controls.Add(this.resultCountLabel);
-            this.Controls.Add(this.currentPageLabel);
             this.Controls.Add(this.nextPage);
             this.Controls.Add(this.prevPage);
             this.Controls.Add(this.label1);
@@ -172,7 +182,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button prevPage;
         private System.Windows.Forms.Button nextPage;
-        private System.Windows.Forms.Label currentPageLabel;
         private System.Windows.Forms.Label resultCountLabel;
+        private System.Windows.Forms.TextBox currentPageEditable;
+        private System.Windows.Forms.Label label2;
     }
 }
