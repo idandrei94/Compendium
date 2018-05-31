@@ -22,7 +22,7 @@ namespace Compendium
 
         public event PropertyChangedEventHandler PropertyChanged;
         
-        public String[] Results => model.Results.Select(n => n.ToString()).ToArray();
+        public String[] Results => model.Results.AsParallel().Select(n => n.ToString()).ToArray();
 
         public Controller(String filepath, String title)
         {

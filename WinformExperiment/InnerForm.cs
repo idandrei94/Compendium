@@ -16,6 +16,7 @@ namespace Compendium
         private TabPage parent;
         public bool Locked { get => locked; }
         public bool Changed { get => controller.Changed; }
+        public String File { get => controller.Filepath; }
 
         private List<NoteWindow> openNotes = new List<NoteWindow>();
 
@@ -42,7 +43,10 @@ namespace Compendium
                     Lock();
                     Task.Run(() =>
                     {
-                        var items = controller.Results.Select(note => new ListViewItem( note.Split((char)31)[1])).ToArray();
+                        Console.WriteLine("Preparing the ListViewItem objects");
+                        DateTime start = DateTime.Now;
+                        ListViewItem[] items = controller.Results.AsParallel().Select(note => new ListViewItem( note.Split((char)31)[1])).ToArray();
+                        Console.WriteLine("Creating {0} ListViewItem objects took {1} seconds", items.Count(), (DateTime.Now - start).TotalSeconds);
                         Console.WriteLine("fetched titles");
                         while (resultList.Items.Count > 0)
                         {
@@ -53,13 +57,13 @@ namespace Compendium
                         }
                         Console.WriteLine("Cleared old results");
                         foreach (var item in items)
-                        {
+                        {/*
                             resultList.Invoke((MethodInvoker)delegate
                             {
                                 resultList.Items.Add(item);
                                 resultList.SelectedIndices.Clear();
                                 currentNoteTags.TabPages.Clear();
-                            });
+                            });*/
                         }
                         Unlock();
                     });
@@ -186,6 +190,7 @@ namespace Compendium
             note.FormClosed += note_NoteClosed;
             openNotes.Add(note);
             note.Show();
+            note.LockWindow();
         }
 
 #pragma warning disable IDE1006 // Naming Styles

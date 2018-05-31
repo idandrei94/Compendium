@@ -130,11 +130,14 @@ namespace Compendium.Model
 
         private Note[] Filter()
         {
+            DateTime start = DateTime.Now;
             isChanged = false;
-            return notes.AsParallel().Where(
+            var ret = notes.AsParallel().Where(
                 n => Filters.Aggregate(
                     true, (acc, val) => acc && val(n) )
                        ).ToArray();
+            Console.WriteLine("Filtering {1} elements took {0} seconds.", (DateTime.Now - start).TotalSeconds, notes.Count);
+            return ret;
         }
         
         public int RemoveFilter(int filterIndex)
@@ -146,10 +149,11 @@ namespace Compendium.Model
 
         public int AddFilter(NoteFilterFactory.FilterType type, String arg)
         {
+            DateTime start = DateTime.Now;
             var filter = NoteFilterFactory.Filter(type, arg);
             Filters.Add(filter);
-            //isChanged = true;
-            _results = _results.Where(r => filter(r)).ToArray();
+            _results = _results.AsParallel().Where(r => filter(r)).ToArray();
+            Console.WriteLine("Filtering {1} elements took {0} seconds.", (DateTime.Now - start).TotalSeconds, notes.Count);
             return Filters.Count;
         }
 

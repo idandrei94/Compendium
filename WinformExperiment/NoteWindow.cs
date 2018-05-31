@@ -37,6 +37,7 @@ namespace Compendium
             // disable the edit button and prevent saving/deleting
             saveButton.Enabled = false;
             editButton.Enabled = false;
+            deleteButton.Enabled = false;
         }
 
         public void UnlockWindow()
@@ -50,6 +51,7 @@ namespace Compendium
             {
                 editButton.Enabled = true;
             }
+            deleteButton.Enabled = true;
         }
 
         private void ParseData()

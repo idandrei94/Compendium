@@ -18,7 +18,7 @@ namespace Compendium
                     {
                         if((tab.Controls[0] as InnerForm).Changed)
                         {
-                            if (MessageBox.Show("Save database before closing?", tab.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            if(MessageBox.Show("Save database before closing?", tab.Text, MessageBoxButtons.YesNo) == DialogResult.OK)
                             {
                                 (tab.Controls[0] as InnerForm).Save();
                             }
@@ -107,9 +107,13 @@ namespace Compendium
                         }
                         if ((tab.Controls[0] as InnerForm).Changed)
                         {
-                            if (MessageBox.Show("Save database before closing?", tab.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            switch (MessageBox.Show("Save database before closing?", tab.Text, MessageBoxButtons.YesNoCancel))
                             {
-                                (tab.Controls[0] as InnerForm).Save();
+                                case DialogResult.OK:
+                                    (tab.Controls[0] as InnerForm).Save();
+                                    break;
+                                case DialogResult.Cancel:
+                                    return;
                             }
                         }
                         (tab.Controls[0] as InnerForm).CloseNotes();
@@ -149,6 +153,15 @@ namespace Compendium
             {
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
+                    foreach(TabPage tab in databaseTabs.TabPages)
+                    {
+                        if ((tab.Controls[0] as InnerForm).File.Equals(dialog.FileName))
+                        {
+                            MessageBox.Show("Database already open.", "Database opened");
+                            databaseTabs.SelectTab(tab);
+                            return;
+                        }
+                    }
                     load_file(dialog.FileName, dialog.SafeFileName);
                 }
             }
