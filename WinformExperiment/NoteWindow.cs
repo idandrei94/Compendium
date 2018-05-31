@@ -149,5 +149,12 @@ namespace Compendium
                 Close();
             }
         }
+
+#pragma warning disable IDE1006 // Naming Styles
+        private void sendToButton_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
+        {
+            MessageBox.Show("Sorry, ain't implemented yet :)", "Not Implemented");
+        }
     }
 }

@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,6 +13,12 @@ namespace Compendium
 
         private Controller controller;
         private TabPage parent;
+
+        private static readonly int RESULTS_PER_PAGE = 1000;
+
+        private int pageCount = 0;
+        private int currentPage = 0;
+
         public bool Locked { get => locked; }
         public bool Changed { get => controller.Changed; }
         public String File { get => controller.Filepath; }
@@ -21,6 +26,8 @@ namespace Compendium
         private List<NoteWindow> openNotes = new List<NoteWindow>();
 
         private bool locked = true;
+
+        private String[] resultStrings = new String[0];
 
         public InnerForm(String filepath, String title, TabPage parent)
         {
@@ -37,69 +44,94 @@ namespace Compendium
             controller = new Controller(filepath, title);
             controller.PropertyChanged += (object sender, PropertyChangedEventArgs args) =>
             {
-                Console.WriteLine("Notified of change");
                 if (args.PropertyName == "Results")
                 {
-                    Lock();
-                    Task.Run(() =>
-                    {
-                        Console.WriteLine("Preparing the ListViewItem objects");
-                        DateTime start = DateTime.Now;
-                        ListViewItem[] items = controller.Results.AsParallel().Select(note => new ListViewItem(note.Split((char)31)[1])).ToArray();
-                        Console.WriteLine("Creating {0} ListViewItem objects took {1} seconds", items.Count(), (DateTime.Now - start).TotalSeconds);
-                        Console.WriteLine("fetched titles");
-                        while (resultList.Items.Count > 0)
-                        {
-                            resultList.Invoke((MethodInvoker)delegate
-                            {
-                                resultList.Items.RemoveAt(0);
-                            });
-                        }
-                        Console.WriteLine("Cleared old results");
-                        foreach (var item in items)
-                        {/*
-                            resultList.Invoke((MethodInvoker)delegate
-                            {
-                                resultList.Items.Add(item);
-                                resultList.SelectedIndices.Clear();
-                                currentNoteTags.TabPages.Clear();
-                            });*/
-                        }
-                        Unlock();
-                    });
+                    int resultCount = controller.ResultCount;
+                    pageCount = (int)Math.Ceiling(resultCount / (double)RESULTS_PER_PAGE);
+                    if (pageCount <= currentPage)
+                        currentPage = 0;
+                    DisplayCurrentPage();
                 }
             };
             controller.Open( () =>
             {
                 Invoke((MethodInvoker)delegate {
-                    MessageBox.Show("Selected file contains no valid Compendium database.", "Invalid file");
+                    MessageBox.Show("Unable to load Compendium database from " + controller.Filepath, "Invalid file");
                     (parent.Parent as TabControl).TabPages.Remove(parent); });
             });
         }
 
+        private void DisplayCurrentPage()
+        {
+            Lock();
+            Console.WriteLine("Clearing current page");
+            resultList.BeginInvoke((MethodInvoker)delegate
+            {
+                resultList.Items.Clear();
+            });
+            int resultCount = controller.ResultCount;
+            int resultsToShow = Math.Min(RESULTS_PER_PAGE, resultCount - currentPage * RESULTS_PER_PAGE);
+            Console.WriteLine("Page cleared, generating {0} items ({1} - {2})", resultsToShow, currentPage * RESULTS_PER_PAGE, currentPage * RESULTS_PER_PAGE+resultsToShow - 1);
+            ListViewItem[] items = new ListViewItem[resultsToShow];
+            resultStrings = controller.ResultRange(currentPage * RESULTS_PER_PAGE, currentPage * RESULTS_PER_PAGE+resultsToShow);
+            for (int i = 0; i < resultsToShow; ++i)
+            {
+                items[i] = new ListViewItem(resultStrings[i].Split((char)31)[1]);
+            }
+            Console.WriteLine("Items generated, adding them to the view");
+            resultList.BeginInvoke((MethodInvoker)delegate
+            {
+                resultList.Items.AddRange(items);
+            });
+            Console.WriteLine("ListView populated, updating labels and stuff");
+            BeginInvoke((MethodInvoker)delegate 
+            {
+                currentPageLabel.Text = "Page " + (currentPage+1) + " / " + pageCount;
+                currentNoteTags.TabPages.Clear();
+                currentNoteTags.Visible = false;
+            });
+            resultCountLabel.BeginInvoke((MethodInvoker)delegate
+            {
+                resultCountLabel.Text = "Showing results " + (currentPage * RESULTS_PER_PAGE + 1) + "-" + (currentPage * RESULTS_PER_PAGE + resultsToShow) + "/" + controller.ResultCount;
+            });
+            Console.WriteLine("Displaying complete, unlocking...");
+            Unlock();
+        }
+
         private void Lock()
         {
-            if (locked)
-                return;
             Console.WriteLine("locking inner form");
-            parent.Text = parent.Text.Split('*')[0] + "*busy";
+            parent.BeginInvoke((MethodInvoker)delegate 
+            {
+                parent.Text = parent.Text.Split('*')[0] + "*busy";
+                nextPage.Enabled = false;
+                prevPage.Enabled = false;
+            });
+            
             foreach(var note in openNotes)
             {
                 note.LockWindow();
             }
             locked = true;
+            Console.WriteLine("inner form locked");
         }
 
         private void Unlock()
         {
             Console.WriteLine("unlocking inner form");
-            parent.Invoke((MethodInvoker)delegate { parent.Text = controller.Title; });
+            parent.BeginInvoke((MethodInvoker)delegate 
+            {
+                parent.Text = controller.Title;
+                nextPage.Enabled = (currentPage+1) < pageCount;
+                prevPage.Enabled = currentPage > 0;
+            });
             foreach (var note in openNotes)
             {
-                if(!note.IsDisposed)
+                if (!note.IsDisposed)
                     note.Invoke((MethodInvoker)delegate { note.UnlockWindow(); });
             }
             locked = false;
+            Console.WriteLine("inner form unlocked");
         }
 
         public void CloseNotes()
@@ -168,7 +200,7 @@ namespace Compendium
             {
                 return;
             }
-            String dataString = controller.Results[resultList.SelectedIndices[0]];
+            String dataString = resultStrings[resultList.SelectedIndices[0]];
             foreach(NoteWindow noteW in openNotes)
             {
                 if (noteW.Data.Equals(dataString))
@@ -195,7 +227,7 @@ namespace Compendium
             note.FormClosed += note_NoteClosed;
             openNotes.Add(note);
             note.Show();
-            note.LockWindow();
+            //note.LockWindow();
         }
 
 #pragma warning disable IDE1006 // Naming Styles
@@ -208,17 +240,19 @@ namespace Compendium
             }
             try
             {
-                String item = controller.Results[resultList.SelectedIndices[0]];
+                String item = resultStrings[resultList.SelectedIndices[0]];
                 String[] tags = item.Split((char)31)[2].Split(';');
                 foreach (String tag in tags)
                 {
                     currentNoteTags.TabPages.Add(tag);
                 }
                 currentNoteTags.SelectedIndex = -1;
+                currentNoteTags.Visible = true;
             }
             catch(Exception)
             {
                 currentNoteTags.TabPages.Clear();
+                currentNoteTags.Visible = false;
             }
         }
 
@@ -235,6 +269,22 @@ namespace Compendium
         {
             var closingNote = sender as NoteWindow;
             openNotes.Remove(closingNote);
+        }
+
+#pragma warning disable IDE1006 // Naming Styles
+        private void prevPage_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
+        {
+            --currentPage;
+            DisplayCurrentPage();
+        }
+
+#pragma warning disable IDE1006 // Naming Styles
+        private void nextPage_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
+        {
+            ++currentPage;
+            DisplayCurrentPage();
         }
     }
 }

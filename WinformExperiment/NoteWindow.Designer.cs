@@ -102,6 +102,7 @@
             this.sendToButton.TabIndex = 8;
             this.sendToButton.Text = "Send To";
             this.sendToButton.UseVisualStyleBackColor = true;
+            this.sendToButton.Click += new System.EventHandler(this.sendToButton_Click);
             // 
             // tagsEditable
             // 

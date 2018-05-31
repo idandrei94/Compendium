@@ -33,6 +33,10 @@
             this.resultList = new System.Windows.Forms.ListView();
             this.currentNoteTags = new System.Windows.Forms.TabControl();
             this.label1 = new System.Windows.Forms.Label();
+            this.prevPage = new System.Windows.Forms.Button();
+            this.nextPage = new System.Windows.Forms.Button();
+            this.currentPageLabel = new System.Windows.Forms.Label();
+            this.resultCountLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // filtersLabel
@@ -64,7 +68,7 @@
             this.resultList.Margin = new System.Windows.Forms.Padding(10);
             this.resultList.MultiSelect = false;
             this.resultList.Name = "resultList";
-            this.resultList.Size = new System.Drawing.Size(724, 398);
+            this.resultList.Size = new System.Drawing.Size(724, 368);
             this.resultList.TabIndex = 3;
             this.resultList.UseCompatibleStateImageBehavior = false;
             this.resultList.SelectedIndexChanged += new System.EventHandler(this.resultList_SelectedIndexChanged);
@@ -77,6 +81,7 @@
             this.currentNoteTags.SelectedIndex = 0;
             this.currentNoteTags.Size = new System.Drawing.Size(682, 20);
             this.currentNoteTags.TabIndex = 4;
+            this.currentNoteTags.Visible = false;
             this.currentNoteTags.SelectedIndexChanged += new System.EventHandler(this.currentNoteTags_SelectedIndexChanged);
             // 
             // label1
@@ -90,6 +95,49 @@
             this.label1.Text = "Tags:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // prevPage
+            // 
+            this.prevPage.Enabled = false;
+            this.prevPage.Location = new System.Drawing.Point(519, 425);
+            this.prevPage.Name = "prevPage";
+            this.prevPage.Size = new System.Drawing.Size(25, 25);
+            this.prevPage.TabIndex = 6;
+            this.prevPage.Text = "<";
+            this.prevPage.UseVisualStyleBackColor = true;
+            this.prevPage.Click += new System.EventHandler(this.prevPage_Click);
+            // 
+            // nextPage
+            // 
+            this.nextPage.Enabled = false;
+            this.nextPage.Location = new System.Drawing.Point(656, 426);
+            this.nextPage.Name = "nextPage";
+            this.nextPage.Size = new System.Drawing.Size(25, 25);
+            this.nextPage.TabIndex = 7;
+            this.nextPage.Text = ">";
+            this.nextPage.UseVisualStyleBackColor = true;
+            this.nextPage.Click += new System.EventHandler(this.nextPage_Click);
+            // 
+            // currentPageLabel
+            // 
+            this.currentPageLabel.AutoSize = true;
+            this.currentPageLabel.Location = new System.Drawing.Point(550, 426);
+            this.currentPageLabel.MaximumSize = new System.Drawing.Size(100, 25);
+            this.currentPageLabel.MinimumSize = new System.Drawing.Size(100, 25);
+            this.currentPageLabel.Name = "currentPageLabel";
+            this.currentPageLabel.Size = new System.Drawing.Size(100, 25);
+            this.currentPageLabel.TabIndex = 8;
+            this.currentPageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // resultCountLabel
+            // 
+            this.resultCountLabel.AutoSize = true;
+            this.resultCountLabel.Location = new System.Drawing.Point(12, 425);
+            this.resultCountLabel.MinimumSize = new System.Drawing.Size(400, 25);
+            this.resultCountLabel.Name = "resultCountLabel";
+            this.resultCountLabel.Size = new System.Drawing.Size(400, 25);
+            this.resultCountLabel.TabIndex = 9;
+            this.resultCountLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // InnerForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -97,6 +145,10 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(749, 489);
+            this.Controls.Add(this.resultCountLabel);
+            this.Controls.Add(this.currentPageLabel);
+            this.Controls.Add(this.nextPage);
+            this.Controls.Add(this.prevPage);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.currentNoteTags);
             this.Controls.Add(this.resultList);
@@ -118,5 +170,9 @@
         private System.Windows.Forms.ListView resultList;
         private System.Windows.Forms.TabControl currentNoteTags;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button prevPage;
+        private System.Windows.Forms.Button nextPage;
+        private System.Windows.Forms.Label currentPageLabel;
+        private System.Windows.Forms.Label resultCountLabel;
     }
 }

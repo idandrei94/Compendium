@@ -64,17 +64,10 @@ namespace Compendium
             databaseTabs.TabPages.Add(page);
             databaseTabs.SelectTab(page);
 
-            try
-            {
-                page.Controls.Add(new InnerForm(filename, title, page));
-                filterButton.Enabled = true;
-                addNoteButton.Enabled = true;
-                saveButton.Enabled = true;
-            }
-            catch(ArgumentException)
-            {
-                databaseTabs.TabPages.Remove(page);
-            }
+            page.Controls.Add(new InnerForm(filename, title, page));
+            filterButton.Enabled = true;
+            addNoteButton.Enabled = true;
+            saveButton.Enabled = true;
         }
 
         private String checkTabTitle(string title)
