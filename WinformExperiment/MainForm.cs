@@ -67,6 +67,8 @@ namespace Compendium
             filterButton.Enabled = true;
             addNoteButton.Enabled = true;
             saveButton.Enabled = true;
+
+            GenerateSendToOptions();
         }
 
         private String checkTabTitle(string title)
@@ -118,12 +120,13 @@ namespace Compendium
                         }
                         (tab.Controls[0] as InnerForm).CloseNotes();
                         databaseTabs.TabPages.Remove(tab);
-                        if (databaseTabs.TabPages.Count == 0)
-                        {
-                            filterButton.Enabled = false;
-                            addNoteButton.Enabled = false;
-                            saveButton.Enabled = false;
-                        }
+
+                        filterButton.Enabled = databaseTabs.TabPages.Count != 0;
+                        addNoteButton.Enabled = databaseTabs.TabPages.Count != 0;
+                        saveButton.Enabled = databaseTabs.TabPages.Count != 0;
+
+                        GenerateSendToOptions();
+
                         return;
                     }
                 }
@@ -281,6 +284,55 @@ namespace Compendium
             {
                 MessageBox.Show("Unable to add filter due to work in progress.", "Error");
                 return;
+            }
+        }
+
+        private void databaseTabs_SelectedIndexChanged(object sender, EventArgs args)
+        {
+            Console.WriteLine("changed tab");
+            GenerateSendToOptions();
+        }
+
+        private void GenerateSendToOptions()
+        {
+            sendToButton.DropDownItems.Clear();
+            foreach (TabPage page in databaseTabs.TabPages)
+            {
+                if (!page.Equals(databaseTabs.SelectedTab))
+                {
+                    ToolStripMenuItem db_item = new ToolStripMenuItem(page.Text)
+                    {
+                        Tag = (page.Controls[0] as InnerForm).File
+                    };
+                    db_item.Click += (object sender, EventArgs args) =>
+                    {
+                        int count = (databaseTabs.SelectedTab.Controls[0] as InnerForm).SelectedItems.Length;
+                        if (count < 1)
+                            return;
+                        TabPage destination = null;
+                        foreach(TabPage tab in databaseTabs.TabPages)
+                        {
+                            if((tab.Controls[0] as InnerForm).File.Equals((sender as ToolStripMenuItem).Tag))
+                            {
+                                destination = tab;
+                            }
+                        }
+                        if(destination == null)
+                        {
+                            Console.WriteLine("tab not found?!");
+                        }
+                        if (MessageBox.Show("Send " + count + (count != 1 ? " items to " : " item to ") + destination?.Text + "?", "Confirm" ) == DialogResult.OK)
+                        {
+                            //Console.WriteLine("Sending items to {0}:", dbname);
+                            foreach (String item in (databaseTabs.SelectedTab.Controls[0] as InnerForm).SelectedItems)
+                            {
+                                Console.WriteLine("      {0}", item);
+                                (destination.Controls[0] as InnerForm).NewNote(item);
+                            }
+                        }
+                    };
+                    sendToButton.DropDownItems.Add(db_item);
+                }
             }
         }
     }

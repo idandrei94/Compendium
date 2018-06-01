@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.ListView;
 
 namespace Compendium
 {
@@ -15,7 +14,7 @@ namespace Compendium
         private Controller controller;
         private TabPage parent;
 
-        private static readonly int RESULTS_PER_PAGE = 1000;
+        private static readonly int RESULTS_PER_PAGE = 100;
 
         private int pageCount = 0;
         private int currentPage = 0;
@@ -23,6 +22,7 @@ namespace Compendium
         public bool Locked { get => locked; }
         public bool Changed { get => controller.Changed; }
         public String File { get => controller.Filepath; }
+        public String[] SelectedItems { get => (from int item in resultList.SelectedIndices select resultStrings[item]).ToArray(); }
 
         private List<NoteWindow> openNotes = new List<NoteWindow>();
 
@@ -249,19 +249,32 @@ namespace Compendium
             note.Show();
         }
 
-        public void NewNote()
+        public void NewNote(String noteString = null)
         {
             if (locked)
             {
-                MessageBox.Show("Unable to add filter due to work in progress.", "Database busy");
+                MessageBox.Show("Unable to add note due to work in progress.", "Database busy");
                 return;
             }
-            String[] tags = { };
-            NoteWindow note = new NoteWindow(true, controller.AddNote("Default title", "Default note body.", tags), controller);
-            note.FormClosed += note_NoteClosed;
-            openNotes.Add(note);
-            note.Show();
-            //note.LockWindow();
+            if(noteString == null)
+            {
+                String[] tags = { };
+                NoteWindow note = new NoteWindow(true, controller.AddNote("Default title", "Default note body.", tags), controller);
+                note.FormClosed += note_NoteClosed;
+                openNotes.Add(note);
+                note.Show();
+            }
+            else
+            {
+                String[] elements = noteString.Split((char)31);
+                String ID = elements[0];
+                String title = elements[1];
+                String tags = elements[2];
+                String added = elements[3];
+                String body = elements[4];
+                String updated = elements[5];
+                controller.AddNote(title, body, tags.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+            }
         }
 
 #pragma warning disable IDE1006 // Naming Styles

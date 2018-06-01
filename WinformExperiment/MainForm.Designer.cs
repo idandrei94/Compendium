@@ -43,6 +43,7 @@
             this.beforeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.afterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keywordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sendToButton = new System.Windows.Forms.ToolStripDropDownButton();
             this.addNoteButton = new System.Windows.Forms.ToolStripButton();
             this.databaseTabs = new System.Windows.Forms.TabControl();
             this.toolStrip1.SuspendLayout();
@@ -55,6 +56,7 @@
             this.loadButton,
             this.saveButton,
             this.filterButton,
+            this.sendToButton,
             this.addNoteButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -131,7 +133,7 @@
             this.hasTagToolStripMenuItem,
             this.doesntHaveTagToolStripMenuItem});
             this.tagToolStripMenuItem.Name = "tagToolStripMenuItem";
-            this.tagToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tagToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.tagToolStripMenuItem.Text = "Tag";
             // 
             // hasTagToolStripMenuItem
@@ -154,7 +156,7 @@
             this.beforeToolStripMenuItem,
             this.afterToolStripMenuItem});
             this.dateToolStripMenuItem.Name = "dateToolStripMenuItem";
-            this.dateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dateToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.dateToolStripMenuItem.Text = "Date";
             // 
             // beforeToolStripMenuItem
@@ -174,9 +176,18 @@
             // keywordToolStripMenuItem
             // 
             this.keywordToolStripMenuItem.Name = "keywordToolStripMenuItem";
-            this.keywordToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.keywordToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.keywordToolStripMenuItem.Text = "Keyword";
             this.keywordToolStripMenuItem.Click += new System.EventHandler(this.keywordToolStripMenuItem_Click);
+            // 
+            // sendToButton
+            // 
+            this.sendToButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.sendToButton.Image = ((System.Drawing.Image)(resources.GetObject("sendToButton.Image")));
+            this.sendToButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.sendToButton.Name = "sendToButton";
+            this.sendToButton.Size = new System.Drawing.Size(60, 22);
+            this.sendToButton.Text = "Send to";
             // 
             // addNoteButton
             // 
@@ -204,6 +215,7 @@
             this.databaseTabs.Size = new System.Drawing.Size(759, 521);
             this.databaseTabs.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.databaseTabs.TabIndex = 1;
+            this.databaseTabs.SelectedIndexChanged += databaseTabs_SelectedIndexChanged;
             // 
             // MainForm
             // 
@@ -244,5 +256,6 @@
         private System.Windows.Forms.ToolStripMenuItem afterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem keywordToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton addNoteButton;
+        private System.Windows.Forms.ToolStripDropDownButton sendToButton;
     }
 }
