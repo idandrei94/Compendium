@@ -12,19 +12,19 @@ namespace Compendium
             InitializeComponent();
             databaseTabs.MouseClick += databaseTabs_MouseClick;
             FormClosing += (object sender, FormClosingEventArgs e) =>
+            {
+                foreach (TabPage tab in databaseTabs.TabPages)
                 {
-                    foreach(TabPage tab in databaseTabs.TabPages)
+                    if ((tab.Controls[0] as InnerForm).Changed)
                     {
-                        if((tab.Controls[0] as InnerForm).Changed)
+                        if (MessageBox.Show("Save database before closing?", tab.Text, MessageBoxButtons.YesNo) == DialogResult.OK)
                         {
-                            if(MessageBox.Show("Save database before closing?", tab.Text, MessageBoxButtons.YesNo) == DialogResult.OK)
-                            {
-                                (tab.Controls[0] as InnerForm).Save();
-                            }
+                            (tab.Controls[0] as InnerForm).Save();
                         }
                     }
-                };
-            DragDrop += (object sender, DragEventArgs args) => { Console.WriteLine("drag event"); };
+                }
+            };
+            databaseTabs.SelectedIndexChanged += databaseTabs_SelectedIndexChanged;
         }
 
         private void MainForm_Load(object sender, EventArgs e) { }
