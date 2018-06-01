@@ -215,12 +215,11 @@
             this.databaseTabs.Size = new System.Drawing.Size(759, 521);
             this.databaseTabs.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.databaseTabs.TabIndex = 1;
-            this.databaseTabs.SelectedIndexChanged += databaseTabs_SelectedIndexChanged;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(784, 561);

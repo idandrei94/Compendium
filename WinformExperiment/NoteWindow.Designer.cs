@@ -47,10 +47,11 @@
             // bodyBox
             // 
             this.bodyBox.Location = new System.Drawing.Point(12, 139);
-            this.bodyBox.MaxLength = 900;
+            this.bodyBox.MaxLength = 1500;
             this.bodyBox.Multiline = true;
             this.bodyBox.Name = "bodyBox";
             this.bodyBox.ReadOnly = true;
+            this.bodyBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.bodyBox.Size = new System.Drawing.Size(460, 410);
             this.bodyBox.TabIndex = 2;
             // 

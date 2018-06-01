@@ -24,6 +24,7 @@ namespace Compendium
                         }
                     }
                 };
+            DragDrop += (object sender, DragEventArgs args) => { Console.WriteLine("drag event"); };
         }
 
         private void MainForm_Load(object sender, EventArgs e) { }

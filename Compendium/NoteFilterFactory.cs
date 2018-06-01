@@ -1,5 +1,6 @@
 ﻿using Compendium.Model.Data;
 using System;
+using System.Linq;
 
 namespace Compendium.Model.Filtering
 {
@@ -20,7 +21,7 @@ namespace Compendium.Model.Filtering
             switch (type)
             {
                 case NoteFilterFactory.FilterType.TAG:
-                    return new Func<Note, bool>((n) => n.Tags.Contains(arg));
+                    return new Func<Note, bool>((n) => n.Tags.Any(note => note.Contains(arg)));
                 case NoteFilterFactory.FilterType.TAG_INVERTED:
                     return new Func<Note, bool>((n) => !n.Tags.Contains(arg));
                 case NoteFilterFactory.FilterType.DATE_AFTER:
