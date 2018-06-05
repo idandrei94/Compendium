@@ -79,7 +79,10 @@ namespace Compendium
             {
                 Invoke((MethodInvoker)delegate {
                     MessageBox.Show("Unable to load Compendium database from " + controller.Filepath, "Invalid file");
-                    (parent.Parent as TabControl).TabPages.Remove(parent); });
+                    (parent.Parent as TabControl).TabPages.Remove(parent);
+                });
+
+
             });
         }
 
@@ -349,6 +352,11 @@ namespace Compendium
         {
             ++currentPage;
             DisplayCurrentPage();
+        }
+
+        private void filterList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -291,6 +291,10 @@ namespace Compendium
         private void databaseTabs_SelectedIndexChanged(object sender, EventArgs args)
         {
             Console.WriteLine("changed tab");
+
+            filterButton.Enabled = databaseTabs.TabPages.Count != 0;
+            addNoteButton.Enabled = databaseTabs.TabPages.Count != 0;
+            saveButton.Enabled = databaseTabs.TabPages.Count != 0;
             GenerateSendToOptions();
         }
 

@@ -56,6 +56,7 @@
             this.filterList.SelectedIndex = 0;
             this.filterList.Size = new System.Drawing.Size(682, 20);
             this.filterList.TabIndex = 2;
+            this.filterList.SelectedIndexChanged += new System.EventHandler(this.filterList_SelectedIndexChanged);
             this.filterList.Click += new System.EventHandler(this.filterList_Click);
             // 
             // resultList
